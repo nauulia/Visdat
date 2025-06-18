@@ -27,13 +27,14 @@ if gender_filter != "All":
 if country_filter != "All":
     filtered_df = filtered_df[filtered_df["Country"] == country_filter]
 
-# Check if data is empty
-if filtered_df.empty:
-    st.warning("⚠️ No data available for the selected filters.")
-else:
+# Drop rows with missing values for plotting
+plot_df = filtered_df.dropna(subset=["Nodule_Size", y_metric, "Thyroid_Cancer_Risk"])
+
+# Render chart only if data is available
+if not plot_df.empty:
     st.subheader("📈 Nodule Size vs Selected Lab Metric")
 
-    source = ColumnDataSource(filtered_df)
+    source = ColumnDataSource(plot_df)
 
     p = figure(
         title=f"Nodule Size vs {y_metric}",
@@ -51,8 +52,7 @@ else:
         size=7,
         fill_color="navy",
         fill_alpha=0.6,
-        line_color=None,
-        legend_field="Thyroid_Cancer_Risk"
+        line_color=None
     )
 
     hover = p.select_one(HoverTool)
@@ -68,15 +68,16 @@ else:
         ("Nodule Size", "@Nodule_Size")
     ]
 
-    p.legend.location = "top_left"
-
     st.bokeh_chart(p, use_container_width=True)
+else:
+    st.warning("⚠️ No data available for the selected filters.")
 
-    st.subheader("📌 Summary Table of Filtered Data")
-    st.dataframe(filtered_df[[
-        "Age", "Gender", "Country", "Thyroid_Cancer_Risk", "Diagnosis",
-        "TSH_Level", "T3_Level", "T4_Level", "Nodule_Size"
-    ]].reset_index(drop=True))
+# Show Summary Table
+st.subheader("📌 Summary Table of Filtered Data")
+st.dataframe(filtered_df[[
+    "Age", "Gender", "Country", "Thyroid_Cancer_Risk", "Diagnosis",
+    "TSH_Level", "T3_Level", "T4_Level", "Nodule_Size"
+]].reset_index(drop=True))
 
 # Footer
 st.markdown("---")
