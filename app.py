@@ -62,6 +62,7 @@ if not plot_df.empty and plot_df[y_metric].dtype.kind in "fi":
         line_color=None
     )
 
+
     hover = p.select_one(HoverTool)
     hover.tooltips = [
         ("Age", "@Age"),
