@@ -30,11 +30,14 @@ if country_filter != "All":
 # Bokeh Chart
 st.subheader("Nodule Size vs Selected Lab Metric")
 source = ColumnDataSource(filtered_df)
-p = figure(title="Nodule Size vs " + y_metric,
-           x_axis_label='Nodule Size (cm)',
-           y_axis_label=y_metric,
-           tools="pan,wheel_zoom,box_zoom,reset,hover",
-           plot_width=700, plot_height=450)
+p = figure(
+    title="Nodule Size vs " + y_metric,
+    x_axis_label='Nodule Size (cm)',
+    y_axis_label=y_metric,
+    tools="pan,wheel_zoom,box_zoom,reset,hover",
+    width=700,
+    height=450
+)
 
 p.circle(x='Nodule_Size', y=y_metric, source=source,
          size=7, color="navy", alpha=0.6, legend_field="Thyroid_Cancer_Risk")
